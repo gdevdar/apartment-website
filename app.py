@@ -564,4 +564,4 @@ prediction = model.predict(feature_vector)
 
 # Show prediction
 st.subheader("Predicted Price:")
-st.write(f"Price per square is {prediction[0]:,.2f} $ and the total {prediction[0]*area:,.2f} $")
+st.write(f"Price per square is {prediction[0]:,.2f} \$ and the total {prediction[0]*area:,.2f} \$")
