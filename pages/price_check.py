@@ -18,6 +18,8 @@ url = st.text_input(
 from link_scrape import data_collector
 from data_extract import row_creator
 from data_extract import data_load
+import pandas as pd
+from procedure import procedure
 
 # Submit button
 if st.button("Check Price"):
@@ -27,9 +29,13 @@ if st.button("Check Price"):
             data = data_collector(url)
             mapping = data_load("mapping.json")
             row = row_creator(data,mapping)
+            df = pd.DataFrame([row])
+            from datetime import date
+            today = date.today().isoformat()
+            df = procedure(df,today)
             # Your scraper code will go here
             # For now, just showing a placeholder
-            st.write(f"{row}")
+            st.dataframe(df, use_container_width=True)
             st.info("URL received and ready for processing!")
         else:
             st.error("Please enter a valid MyHome.ge URL")

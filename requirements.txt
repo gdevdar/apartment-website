@@ -6,3 +6,8 @@ joblib
 xgboost
 bs4
 cloudscraper
+requests
+Pillow
+imagehash
+tqdm
+osmnx
