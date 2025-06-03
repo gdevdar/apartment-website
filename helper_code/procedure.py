@@ -35,12 +35,12 @@ def procedure(df,reference_date):
     # The duplicate procedure should run last. And I think it should take as input the df I generate here.
     return df
 
-from clean_data import clean
-from clean_data import drop_useless
-from coordinate_fix import coordinate_fix
-from urban_fix import urban_fix
-from na_fix import fill_na
-from location import create_location_features
-from engineer import engineer
-from mistakes import clean_mistakes
-from comments import create_comment_cols
+from helper_code.clean_data import clean
+from helper_code.clean_data import drop_useless
+from helper_code.coordinate_fix import coordinate_fix
+from helper_code.urban_fix import urban_fix
+from helper_code.na_fix import fill_na
+from helper_code.location import create_location_features
+from helper_code.engineer import engineer
+from helper_code.mistakes import clean_mistakes
+from helper_code.comments import create_comment_cols

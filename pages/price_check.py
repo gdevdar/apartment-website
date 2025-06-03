@@ -15,11 +15,11 @@ url = st.text_input(
     placeholder="https://www.myhome.ge/pr/..."
 )
 
-from link_scrape import data_collector
-from data_extract import row_creator
-from data_extract import data_load
+from helper_code.link_scrape import data_collector
+from helper_code.data_extract import row_creator
+from helper_code.data_extract import data_load
 import pandas as pd
-from procedure import procedure
+from helper_code.procedure import procedure
 
 # Submit button
 if st.button("Check Price"):
