@@ -565,3 +565,9 @@ prediction = model.predict(feature_vector)
 # Show prediction
 st.subheader("Predicted Price:")
 st.write(f"Price per square is {prediction[0]:,.2f} \$ and the total {prediction[0]*area:,.2f} \$")
+
+q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
+
+lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
+st.write(f"The prediction interval with 90% probability is: {lower:,.2f} \$ - {upper:,.2f} \$")
+st.write(f"With the total price being: {lower*area:,.2f} \$ - {upper*area:,.2f} \$")
