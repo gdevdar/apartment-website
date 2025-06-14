@@ -5,6 +5,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import BallTree
+import re
 
 # pip install streamlit, numpy, pandas, scikit-learn, xgboost
 
@@ -80,8 +81,8 @@ room_types = ["1","2","3","4","5","6","7","8","9","10+"]
 bedroom_types = ["unspecified","1","2","3","4","5","6","7","8","9","10+"]
 
 # Callback functions to update session state
-def update_latitude():
-    st.session_state.latitude = st.session_state.latitude_input
+#def update_latitude():
+#    st.session_state.latitude = st.session_state.latitude_input
 
 def update_longitude():
     st.session_state.longitude = st.session_state.longitude_input
@@ -160,30 +161,105 @@ def update_other_features():
 
 st.subheader("Main Characteristics")
 
+
+def dms_to_decimal(dms_str):
+    # Regex to extract degrees, minutes, seconds, and direction
+    match = re.match(r"(\d+)°(\d+)'(\d+(?:\.\d+)?)\"?([NSEW])", dms_str.strip())
+    if not match:
+        return None
+    
+    degrees, minutes, seconds, direction = match.groups()
+    decimal = float(degrees) + float(minutes) / 60 + float(seconds) / 3600
+    if direction in ['S', 'W']:
+        decimal = -decimal
+    return decimal
+
+def parse_latitude(input_str):
+    try:
+        # Try to convert directly to float (decimal degrees)
+        return float(input_str)
+    except ValueError:
+        # Try DMS parsing
+        decimal = dms_to_decimal(input_str)
+        if decimal is not None:
+            return decimal
+        else:
+            st.error("Invalid latitude format. Use decimal (e.g., 41.699444) or DMS (e.g., 41°41'58.0\"N)")
+            return None
+
+# -- Update function --
+def update_latitude(new_latitude):
+    st.session_state.latitude = new_latitude
+
+# -- Ensure session state is initialized --
+if "latitude" not in st.session_state:
+    st.session_state.latitude = 41.699444  # or any default value in range
+
+
+
 lat_col, lng_col = st.columns(2)
 with lat_col:
-    latitude = st.number_input(
-    label="Latitude",
-    min_value=41.61,
-    max_value=41.84,
-    step=0.000001,
-    format="%.6f",
-    value=st.session_state.latitude,
-    key="latitude_input",
-    on_change=update_latitude
-    )
+    lat_input_str = st.text_input("Enter Latitude", value=str(st.session_state.latitude))
+
+    # latitude = st.number_input(
+    # label="Latitude",
+    # min_value=41.61,
+    # max_value=41.84,
+    # step=0.000001,
+    # format="%.6f",
+    # value=st.session_state.latitude,
+    # key="latitude_input",
+    # on_change=update_latitude
+    # )
+latitude = parse_latitude(lat_input_str)
+
+if latitude is not None:
+    # Optional: check bounds
+    if 41.61 <= latitude <= 41.84:
+        st.session_state.latitude = latitude
+        update_latitude(latitude)
+    else:
+        st.warning("Latitude out of range (41.61 to 41.84)")
+
+
+def parse_longitude(input_str):
+    try:
+        return float(input_str)
+    except ValueError:
+        decimal = dms_to_decimal(input_str)
+        if decimal is not None:
+            return decimal
+        else:
+            st.error("Invalid longitude format. Use decimal (e.g., 44.807182) or DMS (e.g., 44°48'25.9\"E)")
+            return None
+
+def update_longitude(new_longitude):
+    st.session_state.longitude = new_longitude
+
+if "longitude" not in st.session_state:
+    st.session_state.longitude = 44.807182  # or your default
 
 with lng_col:
-    longitude = st.number_input(
-    label="longitude",
-    min_value=44.7,
-    max_value=44.95,
-    step=0.000001,
-    format="%.6f",
-    value=st.session_state.longitude,
-    key="longitude_input",
-    on_change=update_longitude
-    )
+    lng_input_str = st.text_input("Enter Longitude", value=str(st.session_state.longitude))
+    longitude = parse_longitude(lng_input_str)
+    if longitude is not None:
+        if 44.70 <= longitude <= 44.95:
+            update_longitude(longitude)
+        else:
+            st.warning("Longitude out of range (44.70 to 44.85)")
+
+
+# with lng_col:
+#     longitude = st.number_input(
+#     label="longitude",
+#     min_value=44.7,
+#     max_value=44.95,
+#     step=0.000001,
+#     format="%.6f",
+#     value=st.session_state.longitude,
+#     key="longitude_input",
+#     on_change=update_longitude
+#     )
 
 
 col1, col2, col3 = st.columns(3)
