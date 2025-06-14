@@ -11,6 +11,61 @@ from sklearn.neighbors import BallTree
 st.title("Custom Apartment Prediction")
 st.write("Input your specifications below")
 
+# Initialize session state for all inputs if they don't exist
+if 'latitude' not in st.session_state:
+    st.session_state.latitude = 41.697007
+if 'longitude' not in st.session_state:
+    st.session_state.longitude = 44.799183
+if 'urban' not in st.session_state:
+    st.session_state.urban = "Saburtalo"
+if 'bathroom_type' not in st.session_state:
+    st.session_state.bathroom_type = "unspecified"
+if 'area' not in st.session_state:
+    st.session_state.area = 50
+if 'condition' not in st.session_state:
+    st.session_state.condition = "unspecified"
+if 'room_num' not in st.session_state:
+    st.session_state.room_num = "1"
+if 'floor' not in st.session_state:
+    st.session_state.floor = 1
+if 'estate_status' not in st.session_state:
+    st.session_state.estate_status = "ახალი აშენებული"
+if 'bedroom_type' not in st.session_state:
+    st.session_state.bedroom_type = "1"
+if 'total_floors' not in st.session_state:
+    st.session_state.total_floors = 5
+if 'selected_features' not in st.session_state:
+    st.session_state.selected_features = []
+if 'storeroom_type' not in st.session_state:
+    st.session_state.storeroom_type = "unspecified"
+if 'swimming_pool_type' not in st.session_state:
+    st.session_state.swimming_pool_type = "unspecified"
+if 'living_room_type' not in st.session_state:
+    st.session_state.living_room_type = "unspecified"
+if 'build_year' not in st.session_state:
+    st.session_state.build_year = "unspecified"
+if 'height' not in st.session_state:
+    st.session_state.height = 2.7
+if 'balconies' not in st.session_state:
+    st.session_state.balconies = 1
+if 'parking_type' not in st.session_state:
+    st.session_state.parking_type = "unspecified"
+if 'for_special_people' not in st.session_state:
+    st.session_state.for_special_people = "no"
+if 'for_investment' not in st.session_state:
+    st.session_state.for_investment = "no"
+if 'heating_type' not in st.session_state:
+    st.session_state.heating_type = "unspecified"
+if 'project_type' not in st.session_state:
+    st.session_state.project_type = "unspecified"
+if 'hot_water_type' not in st.session_state:
+    st.session_state.hot_water_type = "unspecified"
+if 'material_type' not in st.session_state:
+    st.session_state.material_type = "unspecified"
+if 'other_features' not in st.session_state:
+    st.session_state.other_features = []
+
+# Define all the lists first
 urbans = ["Saburtalo","Didi Dighomi","Vake","Isani","Krtsanisi","Didube","Samgori",
           "Gldani","Nadzaladevi","Mtatsminda","Chughureti","Vashlijvari"]
 
@@ -22,9 +77,86 @@ estate_status_types = ["ახალი აშენებული","ძვე�
 bathroom_types = ["unspecified","1","2","3+","საერთო"]
 
 room_types = ["1","2","3","4","5","6","7","8","9","10+"]
-# id 6 doesn't exist. id 7 is actually 6
 bedroom_types = ["unspecified","1","2","3","4","5","6","7","8","9","10+"]
 
+# Callback functions to update session state
+def update_latitude():
+    st.session_state.latitude = st.session_state.latitude_input
+
+def update_longitude():
+    st.session_state.longitude = st.session_state.longitude_input
+
+def update_urban():
+    st.session_state.urban = st.session_state.urban_input
+
+def update_bathroom():
+    st.session_state.bathroom_type = st.session_state.bathroom_input
+
+def update_area():
+    st.session_state.area = st.session_state.area_input
+
+def update_condition():
+    st.session_state.condition = st.session_state.condition_input
+
+def update_room_num():
+    st.session_state.room_num = st.session_state.room_num_input
+
+def update_floor():
+    st.session_state.floor = st.session_state.floor_input
+
+def update_estate_status():
+    st.session_state.estate_status = st.session_state.estate_status_input
+
+def update_bedroom():
+    st.session_state.bedroom_type = st.session_state.bedroom_input
+
+def update_total_floors():
+    st.session_state.total_floors = st.session_state.total_floors_input
+
+def update_selected_features():
+    st.session_state.selected_features = st.session_state.selected_features_input
+
+def update_storeroom():
+    st.session_state.storeroom_type = st.session_state.storeroom_type_input
+
+def update_swimming_pool():
+    st.session_state.swimming_pool_type = st.session_state.swimming_pool_type_input
+
+def update_living_room():
+    st.session_state.living_room_type = st.session_state.living_room_type_input
+
+def update_build_year():
+    st.session_state.build_year = st.session_state.build_year_input
+
+def update_height():
+    st.session_state.height = st.session_state.height_input
+
+def update_balconies():
+    st.session_state.balconies = st.session_state.balconies_input
+
+def update_parking():
+    st.session_state.parking_type = st.session_state.parking_type_input
+
+def update_special_people():
+    st.session_state.for_special_people = st.session_state.special_people_input
+
+def update_investment():
+    st.session_state.for_investment = st.session_state.investment_input
+
+def update_heating():
+    st.session_state.heating_type = st.session_state.heating_type_input
+
+def update_project():
+    st.session_state.project_type = st.session_state.project_type_input
+
+def update_hot_water():
+    st.session_state.hot_water_type = st.session_state.hot_water_type_input
+
+def update_material():
+    st.session_state.material_type = st.session_state.material_type_input
+
+def update_other_features():
+    st.session_state.other_features = st.session_state.other_features_input
 
 st.subheader("Main Characteristics")
 
@@ -34,8 +166,11 @@ with lat_col:
     label="Latitude",
     min_value=41.61,
     max_value=41.84,
-    step=0.000001,              # Step size of 1 means only integers
-    format="%.6f"          # Optional: ensures it's displayed as an integer
+    step=0.000001,
+    format="%.6f",
+    value=st.session_state.latitude,
+    key="latitude_input",
+    on_change=update_latitude
     )
 
 with lng_col:
@@ -43,44 +178,56 @@ with lng_col:
     label="longitude",
     min_value=44.7,
     max_value=44.95,
-    step=0.000001,              # Step size of 1 means only integers
-    format="%.6f"          # Optional: ensures it's displayed as an integer
+    step=0.000001,
+    format="%.6f",
+    value=st.session_state.longitude,
+    key="longitude_input",
+    on_change=update_longitude
     )
 
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    urban = st.selectbox("Urban", urbans, key="urban")
-    bathroom_type = st.selectbox("Bathroom", bathroom_types, key="bathroom")
+    urban = st.selectbox("Urban", urbans, key="urban_input", index=urbans.index(st.session_state.urban), on_change=update_urban)
+    bathroom_type = st.selectbox("Bathroom", bathroom_types, key="bathroom_input", index=bathroom_types.index(st.session_state.bathroom_type), on_change=update_bathroom)
     area = st.number_input(
     label="Area (square meters)",
     min_value=20,
     max_value=1000,
-    step=1,              # Step size of 1 means only integers
-    format="%d"          # Optional: ensures it's displayed as an integer
+    step=1,
+    format="%d",
+    value=st.session_state.area,
+    key="area_input",
+    on_change=update_area
     )
 
 with col2:
-    condition = st.selectbox("Condition", conditions, key="condition")
-    room_num = st.selectbox("Rooms", room_types, key="rooms")
+    condition = st.selectbox("Condition", conditions, key="condition_input", index=conditions.index(st.session_state.condition), on_change=update_condition)
+    room_num = st.selectbox("Rooms", room_types, key="room_num_input", index=room_types.index(st.session_state.room_num), on_change=update_room_num)
     floor = st.number_input(
     label="Floor",
     min_value=0,
     max_value=2000,
-    step=1,              # Step size of 1 means only integers
-    format="%d"          # Optional: ensures it's displayed as an integer
+    step=1,
+    format="%d",
+    value=st.session_state.floor,
+    key="floor_input",
+    on_change=update_floor
     )
 
 with col3:
-    estate_status = st.selectbox("Estate Status", estate_status_types, key="estate_status")
-    bedroom_type = st.selectbox("Bedrooms", bedroom_types, key="bedrooms")
+    estate_status = st.selectbox("Estate Status", estate_status_types, key="estate_status_input", index=estate_status_types.index(st.session_state.estate_status), on_change=update_estate_status)
+    bedroom_type = st.selectbox("Bedrooms", bedroom_types, key="bedroom_input", index=bedroom_types.index(st.session_state.bedroom_type), on_change=update_bedroom)
     total_floors = st.number_input(
     label="Total floors in the building",
     min_value=0,
     max_value=2000,
-    step=1,              # Step size of 1 means only integers
-    format="%d"          # Optional: ensures it's displayed as an integer
+    step=1,
+    format="%d",
+    value=st.session_state.total_floors,
+    key="total_floors_input",
+    on_change=update_total_floors
     )
 
 st.subheader("More Features")
@@ -151,51 +298,57 @@ features = ["storage room",
             ]
 
 # Multi-select field
-selected_features = st.multiselect("Select available features:", features)
+selected_features = st.multiselect("Select available features:", features, default=st.session_state.selected_features, key="selected_features_input", on_change=update_selected_features)
 
 
 if "storage room" in selected_features:
-    storeroom_type = st.selectbox("storage room type",storeroom_types,key="storeroom_type")
+    storeroom_type = st.selectbox("storage room type", storeroom_types, key="storeroom_type_input", index=storeroom_types.index(st.session_state.storeroom_type), on_change=update_storeroom)
 else:
     storeroom_type = "unspecified"
 if "swimming pool" in selected_features:
-    swimming_pool_type = st.selectbox("swimming pool type",swimming_pool_types,key="swimming_pool_type")
+    swimming_pool_type = st.selectbox("swimming pool type", swimming_pool_types, key="swimming_pool_type_input", index=swimming_pool_types.index(st.session_state.swimming_pool_type), on_change=update_swimming_pool)
 else:
     swimming_pool_type = "unspecified"
 if "living room" in selected_features:
-    living_room_type = st.selectbox("living room type",living_room_types,key="living_room_type")
+    living_room_type = st.selectbox("living room type", living_room_types, key="living_room_type_input", index=living_room_types.index(st.session_state.living_room_type), on_change=update_living_room)
 else:
     living_room_type = "unspecified"
 
 col4, col5, col6 = st.columns(3)
 
 with col4:
-    build_year = st.selectbox("Build year",build_years,key="build_year")
+    build_year = st.selectbox("Build year", build_years, key="build_year_input", index=build_years.index(st.session_state.build_year), on_change=update_build_year)
     height = st.number_input(
         label="Enter height (in meters)",
         min_value=0.0,
         max_value=500.0,
         step=0.01,
-        format="%.2f"  # Optional: display 2 decimal places
+        format="%.2f",
+        value=st.session_state.height,
+        key="height_input",
+        on_change=update_height
     )
     balconies = st.number_input(
         label="Number of balconies",
         min_value=0,
         max_value=300,
         step=1,
-        format="%d"
+        format="%d",
+        value=st.session_state.balconies,
+        key="balconies_input",
+        on_change=update_balconies
     )
-    parking_type = st.selectbox("Parking type",parking_types,key="parking_type")
+    parking_type = st.selectbox("Parking type", parking_types, key="parking_type_input", index=parking_types.index(st.session_state.parking_type), on_change=update_parking)
 
 with col5:
-    for_special_people = st.selectbox("Is it for special people?",["no","yes"],key="for_special_people")
-    for_investment = st.selectbox("Is it for investment?",["no","yes"],key="for_investment")
-    heating_type =  st.selectbox("Heating type",heating_types,key="heating_type")
+    for_special_people = st.selectbox("Is it for special people?", ["no","yes"], key="special_people_input", index=["no","yes"].index(st.session_state.for_special_people), on_change=update_special_people)
+    for_investment = st.selectbox("Is it for investment?", ["no","yes"], key="investment_input", index=["no","yes"].index(st.session_state.for_investment), on_change=update_investment)
+    heating_type = st.selectbox("Heating type", heating_types, key="heating_type_input", index=heating_types.index(st.session_state.heating_type), on_change=update_heating)
 
 with col6:
-    project_type = st.selectbox("Project type",project_types,key="project_type")
-    hot_water_type = st.selectbox("Hot water type",hot_water_types,key="hot_water_type")
-    material_type = st.selectbox("Building material type",material_types,key="material_type")
+    project_type = st.selectbox("Project type", project_types, key="project_type_input", index=project_types.index(st.session_state.project_type), on_change=update_project)
+    hot_water_type = st.selectbox("Hot water type", hot_water_types, key="hot_water_type_input", index=hot_water_types.index(st.session_state.hot_water_type), on_change=update_hot_water)
+    material_type = st.selectbox("Building material type", material_types, key="material_type_input", index=material_types.index(st.session_state.material_type), on_change=update_material)
 
 
 other_words = ["Axis",
@@ -211,7 +364,7 @@ other_words = ["Axis",
                "Secondary",
                "Cheap"]
 
-other_features = st.multiselect("Does any of these describe your apartment?", other_words)
+other_features = st.multiselect("Does any of these describe your apartment?", other_words, default=st.session_state.other_features, key="other_features_input", on_change=update_other_features)
 
 
 # Show what the user selected
