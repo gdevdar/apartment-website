@@ -1,6 +1,6 @@
 pandas
 numpy
-scikit-learn
+scikit-learn==1.7.0
 streamlit
 joblib
 xgboost
@@ -11,3 +11,5 @@ Pillow
 imagehash
 tqdm
 osmnx
+matplotlib
+pygam

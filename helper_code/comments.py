@@ -28,7 +28,7 @@ def comment_columns(comment):
         comment = ""
     has_comment_list = []
     # Each word list in the list corresponds to a feature
-    words_list = [["აქსის","აქსისი"],
+    words_list = [
              ["ბაგებ","ბაგებში","ბაგები"],
              ["სასწრაფოდ","სასწრაფოოდ"],
              ["უცხოვრებელი"],
@@ -41,7 +41,8 @@ def comment_columns(comment):
              ["იაფად","იაფი"],
              ["ჭკვიანი"],
              ["მოპირკეთებულია","მოპირკეთებული"],
-             ["ევროპული"]
+             ["ევროპული"],
+             ["ხედი", "გადაჰყურებს", "ხედით"]
             ]
     # Goes through each set of words
     for words in words_list:
@@ -56,7 +57,6 @@ def comment_columns(comment):
 
 def create_comment_cols(df):
     col_names = [
-        'word_Axis',
         'word_Bagebi',
         'word_Urgent',
         'word_Unlived',
@@ -67,7 +67,8 @@ def create_comment_cols(df):
         'word_cheap',
         'word_smart',
         'word_paved',
-        'word_european'
+        'word_european',
+        'word_with_view'
     ]
     df[col_names] = df['comment'].apply(lambda txt: Series(comment_columns(txt), index=col_names))
     df=df.drop(columns = ['comment'])
@@ -78,7 +79,6 @@ def main():
     df = read_json("new_2025-05-02.json")
     df = create_comment_cols(df)
     col_names = [
-        'word_Axis',
         'word_Bagebi',
         'word_Urgent',
         'word_Unlived',
@@ -89,7 +89,8 @@ def main():
         'word_cheap',
         'word_smart',
         'word_paved',
-        'word_european'
+        'word_european',
+        'word_with_view'
     ]
     counts = {col: df[col].value_counts() for col in col_names}
     value_counts_df = df[col_names] \
