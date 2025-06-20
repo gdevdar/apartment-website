@@ -357,7 +357,7 @@ features = ["storage room",
             "dishwasher",
             "washing machine",
             "electricity",
-            "sewage",
+            #"sewage",
             "water",
             "veranda",
             "loggia",
@@ -438,7 +438,8 @@ other_words = ["Axis",
                "Paved",
                "Unlived",
                "Secondary",
-               "Cheap"]
+               "Cheap",
+               "Good view"]
 
 other_features = st.multiselect("Does any of these describe your apartment?", other_words, default=st.session_state.other_features, key="other_features_input", on_change=update_other_features)
 
@@ -480,7 +481,7 @@ has_living_room = 1 if "living room" in selected_features else 0
 has_loggia = 1 if "loggia" in selected_features else 0
 has_veranda = 1 if "veranda" in selected_features else 0
 has_water = 1 if "water" in selected_features else 0
-has_sewage = 1 if "sewage" in selected_features else 0
+#has_sewage = 1 if "sewage" in selected_features else 0
 has_electricity = 1 if "electricity" in selected_features else 0
 has_spa = 1 if "spa" in selected_features else 0
 has_bar = 1 if "bar" in selected_features else 0
@@ -512,10 +513,26 @@ def haversine(lat1, lon1, lat2, lon2):
 
     return R * c  # distance in kilometers
 
-def dist_to_center():
+def dist_to_specific():
     cent_lat = 41.697007
     cent_lng = 44.799183
-    return haversine(latitude, longitude,cent_lat,cent_lng)
+    city_center_dist = haversine(latitude, longitude,cent_lat,cent_lng)
+    lisi_lat = 41.742885
+    lisi_lng = 44.733691
+    lisi_lake_dist = haversine(latitude, longitude,lisi_lat,lisi_lng)
+    ku_lat = 41.700945
+    ku_lng = 44.754591
+    ku_lake_dist = haversine(latitude, longitude,ku_lat,ku_lng)
+    dinamo_lat = 41.722849
+    dinamo_lng = 44.789828
+    dinamo_dist = haversine(latitude, longitude,dinamo_lat,dinamo_lng)
+    meskhi_lat = 41.710134
+    meskhi_lng = 44.746094
+    meskhi_dist = haversine(latitude, longitude,meskhi_lat,meskhi_lng)
+    public_service_hall_lat = 41.699147
+    public_service_hall_lng = 44.806558
+    public_service_hall_dist = haversine(latitude, longitude,public_service_hall_lat,public_service_hall_lng)
+    return city_center_dist,lisi_lake_dist,ku_lake_dist,dinamo_dist,meskhi_dist,public_service_hall_dist
 
 def dist_to_places(path,coords):
     # Read metro station coordinates
@@ -546,27 +563,252 @@ def count_within_radius(path, coords, radius_km):
 
 coords = [latitude, longitude]
 
-city_center_dist = dist_to_center()
-nearest_metro_dist = dist_to_places('for_location/metro_stations.csv', coords)
-nearest_bus_stop_dist = dist_to_places('for_location/tbilisi_bus_stops.csv', coords)
-nearest_gym_dist = dist_to_places('for_location/tbilisi_gyms.csv', coords)
-nearest_kindergarten_dist = dist_to_places('for_location/tbilisi_kindergartens.csv', coords)
-nearest_park_dist = dist_to_places('for_location/tbilisi_parks.csv', coords)
-nearest_pharmacy_dist = dist_to_places('for_location/tbilisi_pharmacies.csv', coords)
-nearest_school_dist = dist_to_places('for_location/tbilisi_schools.csv', coords)
-nearest_supermarket_dist = dist_to_places('for_location/tbilisi_supermarkets.csv', coords)
-nearest_university_dist = dist_to_places('for_location/tbilisi_universities.csv', coords)
+# Dist to specific
+city_center_dist\
+    ,lisi_lake_dist\
+        ,ku_lake_dist\
+            ,dinamo_dist\
+                 ,meskhi_dist\
+                     ,public_service_hall_dist = dist_to_specific()
 
-metro_stations_nearby = count_within_radius('for_location/metro_stations.csv',coords,1)
-bus_stops_nearby = count_within_radius('for_location/tbilisi_bus_stops.csv', coords, 1)
-gyms_nearby = count_within_radius('for_location/tbilisi_gyms.csv',coords, 1)
-kindergartens_nearby = count_within_radius('for_location/tbilisi_kindergartens.csv', coords, 1)
-parks_nearby = count_within_radius('for_location/tbilisi_parks.csv',coords, 1)
-pharmacies_nearby = count_within_radius('for_location/tbilisi_pharmacies.csv',coords, 1)
-schools_nearby = count_within_radius('for_location/tbilisi_schools.csv', coords, 1)
-supermarkets_nearby = count_within_radius('for_location/tbilisi_supermarkets.csv', coords, 1)
-universities_nearby = count_within_radius('for_location/tbilisi_universities.csv', coords, 1)
+# Nearest distances
+nearest_metro_dist = dist_to_places('for_location/metro_stations.csv',coords)
+nearest_bus_stop_dist = dist_to_places('for_location/tbilisi_bus_stops.csv',coords)
+nearest_gym_dist = dist_to_places( 'for_location/tbilisi_gyms.csv',  coords)
+nearest_kindergarten_dist = dist_to_places( 'for_location/tbilisi_kindergartens.csv',  coords)
+nearest_park_dist = dist_to_places( 'for_location/tbilisi_parks.csv', coords)
+nearest_pharmacy_dist = dist_to_places( 'for_location/tbilisi_pharmacies.csv',  coords)
+nearest_school_dist = dist_to_places( 'for_location/tbilisi_schools.csv',  coords)
+nearest_supermarket_dist = dist_to_places( 'for_location/tbilisi_supermarkets.csv',  coords)
+nearest_university_dist = dist_to_places( 'for_location/tbilisi_universities.csv',  coords)
+nearest_atms_dist = dist_to_places( 'for_location/tbilisi_atms.csv',  coords)
+nearest_banks_dist = dist_to_places( 'for_location/tbilisi_banks.csv',  coords)
+nearest_gas_dist = dist_to_places( 'for_location/tbilisi_gas_stations.csv',  coords)
+nearest_hospitals_dist = dist_to_places( 'for_location/tbilisi_hospitals.csv',  coords)
+nearest_malls_dist = dist_to_places( 'for_location/tbilisi_malls.csv',  coords)
+nearest_big_swimming_sites_dist = dist_to_places( 'for_location/big_swimming_sites.csv',  coords)
+nearest_courts_dist = dist_to_places( 'for_location/tbilisi_courts.csv',  coords)
+nearest_embassies_dist = dist_to_places( 'for_location/tbilisi_embassies.csv',  coords)
+nearest_entertainment_dist = dist_to_places( 'for_location/tbilisi_entertainment_venues.csv',  coords)
+nearest_fast_food_dist = dist_to_places( 'for_location/tbilisi_fast_food_expanded.csv',  coords)
+nearest_police_stations_dist = dist_to_places( 'for_location/tbilisi_police_stations.csv',  coords)
+nearest_swimming_pools_dist = dist_to_places( 'for_location/tbilisi_swimming_pools.csv',  coords)
+nearest_fast_food_chain_dist = dist_to_places( 'for_location/tbilisi_fast_food_chain.csv',  coords)
 
+# Nearby distances 1 km
+metro_stations_nearby_1km = count_within_radius( 'for_location/metro_stations.csv',  coords, 1)
+bus_stops_nearby_1km = count_within_radius( 'for_location/tbilisi_bus_stops.csv',  coords, 1)
+gyms_nearby_1km = count_within_radius( 'for_location/tbilisi_gyms.csv',  coords, 1)
+kindergartens_nearby_1km = count_within_radius( 'for_location/tbilisi_kindergartens.csv',  coords, 1)
+parks_nearby_1km = count_within_radius( 'for_location/tbilisi_parks.csv',  coords, 1)
+pharmacies_nearby_1km = count_within_radius( 'for_location/tbilisi_pharmacies.csv',  coords, 1)
+schools_nearby_1km = count_within_radius( 'for_location/tbilisi_schools.csv',  coords, 1)
+supermarkets_nearby_1km = count_within_radius( 'for_location/tbilisi_supermarkets.csv',  coords, 1)
+universities_nearby_1km = count_within_radius( 'for_location/tbilisi_universities.csv',  coords, 1)
+atms_nearby_1km = count_within_radius( 'for_location/tbilisi_atms.csv',  coords, 1)
+banks_nearby_1km = count_within_radius( 'for_location/tbilisi_banks.csv',  coords, 1)
+gas_stations_nearby_1km = count_within_radius( 'for_location/tbilisi_gas_stations.csv',  coords, 1)
+hospitals_nearby_1km = count_within_radius( 'for_location/tbilisi_hospitals.csv',  coords, 1)
+malls_nearby_1km = count_within_radius( 'for_location/tbilisi_malls.csv',  coords, 1)
+big_swimming_sites_nearby_1km = count_within_radius( 'for_location/big_swimming_sites.csv',  coords,1)
+courts_nearby_1km = count_within_radius( 'for_location/tbilisi_courts.csv',  coords, 1)
+embassies_nearby_1km = count_within_radius( 'for_location/tbilisi_embassies.csv',  coords,1)
+entertainment_nearby_1km = count_within_radius( 'for_location/tbilisi_entertainment_venues.csv',  coords,1)
+fast_food_nearby_1km = count_within_radius( 'for_location/tbilisi_fast_food_expanded.csv',  coords,1)
+police_stations_nearby_1km = count_within_radius( 'for_location/tbilisi_police_stations.csv',  coords,1)
+swimming_pools_nearby_1km = count_within_radius( 'for_location/tbilisi_swimming_pools.csv',  coords,1)
+fast_food_chain_nearby_1km = count_within_radius( 'for_location/tbilisi_fast_food_chain.csv',  coords, 1)
+
+# Nearby distances 500 m
+metro_stations_nearby_500m = count_within_radius( 'for_location/metro_stations.csv',  coords, 0.5)
+bus_stops_nearby_500m = count_within_radius( 'for_location/tbilisi_bus_stops.csv',  coords, 0.5)
+gyms_nearby_500m = count_within_radius( 'for_location/tbilisi_gyms.csv',  coords, 0.5)
+kindergartens_nearby_500m = count_within_radius( 'for_location/tbilisi_kindergartens.csv',  coords, 0.5)
+parks_nearby_500m = count_within_radius( 'for_location/tbilisi_parks.csv',  coords, 0.5)
+pharmacies_nearby_500m = count_within_radius( 'for_location/tbilisi_pharmacies.csv',  coords, 0.5)
+schools_nearby_500m = count_within_radius( 'for_location/tbilisi_schools.csv',  coords, 0.5)
+supermarkets_nearby_500m = count_within_radius( 'for_location/tbilisi_supermarkets.csv',  coords, 0.5)
+universities_nearby_500m = count_within_radius( 'for_location/tbilisi_universities.csv',  coords, 0.5)
+atms_nearby_500m = count_within_radius( 'for_location/tbilisi_atms.csv',  coords, 0.5)
+banks_nearby_500m = count_within_radius( 'for_location/tbilisi_banks.csv',  coords, 0.5)
+gas_stations_nearby_500m = count_within_radius( 'for_location/tbilisi_gas_stations.csv',  coords, 0.5)
+hospitals_nearby_500m = count_within_radius( 'for_location/tbilisi_hospitals.csv',  coords, 0.5)
+malls_nearby_500m = count_within_radius( 'for_location/tbilisi_malls.csv',  coords, 0.5)
+big_swimming_sites_nearby_500m = count_within_radius( 'for_location/big_swimming_sites.csv',  coords,0.5)
+courts_nearby_500m = count_within_radius( 'for_location/tbilisi_courts.csv',  coords, 0.5)
+embassies_nearby_500m = count_within_radius( 'for_location/tbilisi_embassies.csv',  coords,0.5)
+entertainment_nearby_500m = count_within_radius( 'for_location/tbilisi_entertainment_venues.csv',  coords,0.5)
+fast_food_nearby_500m = count_within_radius( 'for_location/tbilisi_fast_food_expanded.csv',  coords,0.5)
+police_stations_nearby_500m = count_within_radius( 'for_location/tbilisi_police_stations.csv',  coords,0.5)
+swimming_pools_nearby_500m = count_within_radius( 'for_location/tbilisi_swimming_pools.csv',  coords,0.5)
+fast_food_chain_nearby_500m = count_within_radius( 'for_location/tbilisi_fast_food_chain.csv',  coords, 0.5)
+# Nearby distances 200 m
+
+metro_stations_nearby_200m = count_within_radius( 'for_location/metro_stations.csv',  coords, 0.2)
+bus_stops_nearby_200m = count_within_radius( 'for_location/tbilisi_bus_stops.csv',  coords, 0.2)
+gyms_nearby_200m = count_within_radius( 'for_location/tbilisi_gyms.csv',  coords, 0.2)
+kindergartens_nearby_200m = count_within_radius( 'for_location/tbilisi_kindergartens.csv',  coords, 0.2)
+parks_nearby_200m = count_within_radius( 'for_location/tbilisi_parks.csv',  coords, 0.2)
+pharmacies_nearby_200m = count_within_radius( 'for_location/tbilisi_pharmacies.csv',  coords, 0.2)
+schools_nearby_200m = count_within_radius( 'for_location/tbilisi_schools.csv',  coords, 0.2)
+supermarkets_nearby_200m = count_within_radius( 'for_location/tbilisi_supermarkets.csv',  coords, 0.2)
+universities_nearby_200m = count_within_radius( 'for_location/tbilisi_universities.csv',  coords, 0.2)
+atms_nearby_200m = count_within_radius( 'for_location/tbilisi_atms.csv',  coords, 0.2)
+banks_nearby_200m = count_within_radius( 'for_location/tbilisi_banks.csv',  coords, 0.2)
+gas_stations_nearby_200m = count_within_radius( 'for_location/tbilisi_gas_stations.csv',  coords, 0.2)
+hospitals_nearby_200m = count_within_radius( 'for_location/tbilisi_hospitals.csv',  coords, 0.2)
+malls_nearby_200m = count_within_radius( 'for_location/tbilisi_malls.csv',  coords, 0.2)
+big_swimming_sites_nearby_200m = count_within_radius( 'for_location/big_swimming_sites.csv',  coords,0.2)
+courts_nearby_200m = count_within_radius( 'for_location/tbilisi_courts.csv',  coords, 0.2)
+embassies_nearby_200m = count_within_radius( 'for_location/tbilisi_embassies.csv',  coords,0.2)
+entertainment_nearby_200m = count_within_radius( 'for_location/tbilisi_entertainment_venues.csv',  coords,0.2)
+fast_food_nearby_200m = count_within_radius( 'for_location/tbilisi_fast_food_expanded.csv',  coords,0.2)
+police_stations_nearby_200m = count_within_radius( 'for_location/tbilisi_police_stations.csv',  coords,0.2)
+swimming_pools_nearby_200m = count_within_radius( 'for_location/tbilisi_swimming_pools.csv',  coords,0.2)
+fast_food_chain_nearby_200m = count_within_radius( 'for_location/tbilisi_fast_food_chain.csv',  coords, 0.2)
+# Nearby distances 100 m
+
+metro_stations_nearby_100m = count_within_radius( 'for_location/metro_stations.csv',  coords, 0.1)
+bus_stops_nearby_100m = count_within_radius( 'for_location/tbilisi_bus_stops.csv',  coords, 0.1)
+gyms_nearby_100m = count_within_radius( 'for_location/tbilisi_gyms.csv',  coords, 0.1)
+kindergartens_nearby_100m = count_within_radius( 'for_location/tbilisi_kindergartens.csv',  coords, 0.1)
+parks_nearby_100m = count_within_radius( 'for_location/tbilisi_parks.csv',  coords, 0.1)
+pharmacies_nearby_100m = count_within_radius( 'for_location/tbilisi_pharmacies.csv',  coords, 0.1)
+schools_nearby_100m = count_within_radius( 'for_location/tbilisi_schools.csv',  coords, 0.1)
+supermarkets_nearby_100m = count_within_radius( 'for_location/tbilisi_supermarkets.csv',  coords, 0.1)
+universities_nearby_100m = count_within_radius( 'for_location/tbilisi_universities.csv',  coords, 0.1)
+atms_nearby_100m = count_within_radius( 'for_location/tbilisi_atms.csv',  coords, 0.1)
+banks_nearby_100m = count_within_radius( 'for_location/tbilisi_banks.csv',  coords, 0.1)
+gas_stations_nearby_100m = count_within_radius( 'for_location/tbilisi_gas_stations.csv',  coords, 0.1)
+hospitals_nearby_100m = count_within_radius( 'for_location/tbilisi_hospitals.csv',  coords, 0.1)
+malls_nearby_100m = count_within_radius( 'for_location/tbilisi_malls.csv',  coords, 0.1)
+big_swimming_sites_nearby_100m = count_within_radius( 'for_location/big_swimming_sites.csv',  coords,0.1)
+courts_nearby_100m = count_within_radius( 'for_location/tbilisi_courts.csv',  coords, 0.1)
+embassies_nearby_100m = count_within_radius( 'for_location/tbilisi_embassies.csv',  coords,0.1)
+entertainment_nearby_100m = count_within_radius( 'for_location/tbilisi_entertainment_venues.csv',  coords,0.1)
+fast_food_nearby_100m = count_within_radius( 'for_location/tbilisi_fast_food_expanded.csv',  coords,0.1)
+police_stations_nearby_100m = count_within_radius( 'for_location/tbilisi_police_stations.csv',  coords,0.1)
+swimming_pools_nearby_100m = count_within_radius( 'for_location/tbilisi_swimming_pools.csv',  coords,0.1)
+fast_food_chain_nearby_100m = count_within_radius( 'for_location/tbilisi_fast_food_chain.csv',  coords, 0.1)
+
+distance_variables = [
+    city_center_dist,
+    lisi_lake_dist,
+    ku_lake_dist,
+    dinamo_dist,
+    meskhi_dist,
+    public_service_hall_dist,
+    nearest_metro_dist,
+    nearest_bus_stop_dist,
+    nearest_gym_dist,
+    nearest_kindergarten_dist,
+    nearest_park_dist,
+    nearest_pharmacy_dist,
+    nearest_school_dist,
+    nearest_supermarket_dist,
+    nearest_university_dist,
+    nearest_atms_dist,
+    nearest_banks_dist,
+    nearest_gas_dist,
+    nearest_hospitals_dist,
+    nearest_malls_dist,
+    nearest_big_swimming_sites_dist,
+    nearest_courts_dist,
+    nearest_embassies_dist,
+    nearest_entertainment_dist,
+    nearest_fast_food_dist,
+    nearest_police_stations_dist,
+    nearest_swimming_pools_dist,
+    nearest_fast_food_chain_dist,
+    metro_stations_nearby_1km,
+    bus_stops_nearby_1km,
+    gyms_nearby_1km,
+    kindergartens_nearby_1km,
+    parks_nearby_1km,
+    pharmacies_nearby_1km,
+    schools_nearby_1km,
+    supermarkets_nearby_1km,
+    universities_nearby_1km,
+    atms_nearby_1km,
+    banks_nearby_1km,
+    gas_stations_nearby_1km,
+    hospitals_nearby_1km,
+    malls_nearby_1km,
+    big_swimming_sites_nearby_1km,
+    courts_nearby_1km,
+    embassies_nearby_1km,
+    entertainment_nearby_1km,
+    fast_food_nearby_1km,
+    police_stations_nearby_1km,
+    swimming_pools_nearby_1km,
+    fast_food_chain_nearby_1km,
+    metro_stations_nearby_500m,
+    bus_stops_nearby_500m,
+    gyms_nearby_500m,
+    kindergartens_nearby_500m,
+    parks_nearby_500m,
+    pharmacies_nearby_500m,
+    schools_nearby_500m,
+    supermarkets_nearby_500m,
+    universities_nearby_500m,
+    atms_nearby_500m,
+    banks_nearby_500m,
+    gas_stations_nearby_500m,
+    hospitals_nearby_500m,
+    malls_nearby_500m,
+    big_swimming_sites_nearby_500m,
+    courts_nearby_500m,
+    embassies_nearby_500m,
+    entertainment_nearby_500m,
+    fast_food_nearby_500m,
+    police_stations_nearby_500m,
+    swimming_pools_nearby_500m,
+    fast_food_chain_nearby_500m,
+    metro_stations_nearby_200m,
+    bus_stops_nearby_200m,
+    gyms_nearby_200m,
+    kindergartens_nearby_200m,
+    parks_nearby_200m,
+    pharmacies_nearby_200m,
+    schools_nearby_200m,
+    supermarkets_nearby_200m,
+    universities_nearby_200m,
+    atms_nearby_200m,
+    banks_nearby_200m,
+    gas_stations_nearby_200m,
+    hospitals_nearby_200m,
+    malls_nearby_200m,
+    big_swimming_sites_nearby_200m,
+    courts_nearby_200m,
+    embassies_nearby_200m,
+    entertainment_nearby_200m,
+    fast_food_nearby_200m,
+    police_stations_nearby_200m,
+    swimming_pools_nearby_200m,
+    fast_food_chain_nearby_200m,
+    metro_stations_nearby_100m,
+    bus_stops_nearby_100m,
+    gyms_nearby_100m,
+    kindergartens_nearby_100m,
+    parks_nearby_100m,
+    pharmacies_nearby_100m,
+    schools_nearby_100m,
+    supermarkets_nearby_100m,
+    universities_nearby_100m,
+    atms_nearby_100m,
+    banks_nearby_100m,
+    gas_stations_nearby_100m,
+    hospitals_nearby_100m,
+    malls_nearby_100m,
+    big_swimming_sites_nearby_100m,
+    courts_nearby_100m,
+    embassies_nearby_100m,
+    entertainment_nearby_100m,
+    fast_food_nearby_100m,
+    police_stations_nearby_100m,
+    swimming_pools_nearby_100m,
+    fast_food_chain_nearby_100m,
+]
 # True ratio
 for_special_people = 1 if for_special_people == "yes" else 0
 for_investment = 1 if for_investment == "yes" else 0
@@ -575,7 +817,7 @@ sum_of_true = is_old+can_exchanged+for_special_people+has_color+has_gas+has_inte
 +has_TV+has_air_conditioner+has_alarms+has_elevator+has_ventilation+has_freight_elevator\
 +has_chimney+has_furniture+has_telephone+has_protection+has_Jacuzzi+has_swimming_pool\
 +has_sauna+has_fridge+has_washing_machine+has_dishwasher+has_stove+has_oven+has_living_room\
-+has_loggia+has_veranda+has_water+has_sewage+has_electricity+has_spa+has_bar+has_gym+has_coded_door\
++has_loggia+has_veranda+has_water+0.3168+has_electricity+has_spa+has_bar+has_gym+has_coded_door\
 +has_grill+has_spa+has_bed+has_sofa+has_table+has_chair+has_kitchen_with_technology+has_storage_room\
 +for_investment
 total_boolean = 42.0
@@ -594,6 +836,7 @@ word_cheap = 1 if "Cheap" in other_features else 0
 word_smart = 1 if "Smart" in other_features else 0
 word_paved = 1 if "Paved" in other_features else 0
 word_european = 1 if "European" in other_features else 0
+word_has_view = 1 if "Good view" in other_features else 0
 # estate_status_types
 
 estate_status_types_col = ["ახალი აშენებული","მშენებარე","ძველი აშენებული"]
@@ -729,7 +972,7 @@ input_array = [
     has_loggia,
     has_veranda,
     has_water,
-    has_sewage,
+    #has_sewage,
     has_electricity,
     has_spa,
     has_bar,
@@ -742,26 +985,9 @@ input_array = [
     has_chair,
     has_kitchen_with_technology,
     has_storage_room,
-    for_investment,
-    city_center_dist,
-    nearest_metro_dist,
-    nearest_bus_stop_dist,
-    nearest_gym_dist,
-    nearest_kindergarten_dist,
-    nearest_park_dist,
-    nearest_pharmacy_dist,
-    nearest_school_dist,
-    nearest_supermarket_dist,
-    nearest_university_dist,
-    metro_stations_nearby,
-    bus_stops_nearby,
-    gyms_nearby,
-    kindergartens_nearby,
-    parks_nearby,
-    pharmacies_nearby,
-    schools_nearby,
-    supermarkets_nearby,
-    universities_nearby,
+    for_investment,]\
+    +distance_variables\
+    +[
     created_days_ago,
     updated_days_ago,
     true_ratio,
@@ -777,6 +1003,7 @@ input_array = [
     word_smart,
     word_paved,
     word_european,
+    word_has_view
 ]+estate_status_types_val+bathroom_types_val+proj_types_vals+heating_types_val+parking_types_val\
 +storeroom_types_val+material_types_val+swimming_pool_types_val+hot_water_types_val+conditions_val\
 +living_room_types_val+build_years_val+user_types_val+urbans_val
@@ -785,7 +1012,8 @@ input_array = [
 
 
 import joblib
-model = joblib.load("xgboost_model.pkl")
+model = joblib.load("xgboost_model18june.pkl")
+loforest = joblib.load("loforest_full_model.pkl")
 
 feature_vector = np.array(input_array).reshape(1,-1)
 
@@ -795,8 +1023,11 @@ prediction = model.predict(feature_vector)
 st.subheader("Predicted Price:")
 st.write(f"Price per square is {prediction[0]:,.2f} \$ and the total {prediction[0]*area:,.2f} \$")
 
-q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
+#q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
 
-lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
+bounds = loforest.predict(feature_vector)
+lower = bounds[:,0][0]
+upper = bounds[:,1][0]
+#lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
 st.write(f"The prediction interval with 90% probability is: {lower:,.2f} \$ - {upper:,.2f} \$")
 st.write(f"With the total price being: {lower*area:,.2f} \$ - {upper*area:,.2f} \$")

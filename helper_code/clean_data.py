@@ -131,7 +131,8 @@ def drop_useless(df):
         #"comment",
         "point_coordinates",
         "street_id",
-        "Booking/AirBnb account"
+        #"Booking/AirBnb account"
+        "has_sewage"
     ]
 
     duplicate_columns = [

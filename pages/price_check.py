@@ -185,7 +185,7 @@ if 'result_df' in st.session_state:
     input_array = lst+categoricals
     #st.write(input_array)
     import joblib
-    model = joblib.load("xgboost_model.pkl")
+    model = joblib.load("xgboost_model18june.pkl")
 
     feature_vector = np.array(input_array).reshape(1,-1)
 
@@ -207,9 +207,13 @@ if 'result_df' in st.session_state:
     f"🔍 This apartment is **{per_sqm_label}** by `${abs(diff_per_sqm):,.0f}` per square meter.\n\n"
     f"🔍 It is **{total_label}** by `${abs(diff_total):,.0f}` in total."
     )
-    q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
+    #q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
+    loforest = joblib.load("loforest_full_model.pkl")
+    bounds = loforest.predict(feature_vector)
+    lower = bounds[:,0][0]
+    upper = bounds[:,1][0]
 
-    lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
+    #lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
 
     st.markdown(
         f"📈 **Prediction interval (90% probability):** `${lower:,.0f}` - `${upper:,.0f}` per square meter\n\n"
