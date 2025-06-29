@@ -51,10 +51,6 @@ if 'result_df' in st.session_state:
     total_price = df['price_2_price_total'].iloc[0]
     price_per_sqm = df['price_2_price_square'].iloc[0]
 
-    st.markdown(
-        f"🏠 **Apartment ID:** `{apartment_id}`\n\n💵 **Price:** `${total_price:,.0f}`\n\n📐 **Price per square meter:** `${price_per_sqm:,.0f}`"
-    )
-
     df = df.drop(columns = ['id','price_2_price_total','price_2_price_square'])
     estate_status = df['estate_status_types'].iloc[0]
     bathroom_type = df['bathroom_type'].iloc[0]
@@ -192,10 +188,6 @@ if 'result_df' in st.session_state:
     prediction = model.predict(feature_vector)
     predicted_value = prediction[0]
     total_price_pred = predicted_value * df['area'].iloc[0]
-    st.markdown(
-    f"📊 **Predicted price per square meter:** `${predicted_value:,.0f}`\n\n"
-    f"💰 **Predicted total price:** `${total_price_pred:,.0f}`"
-    )
 
     diff_per_sqm = price_per_sqm - predicted_value
     diff_total = total_price - total_price_pred
@@ -204,8 +196,11 @@ if 'result_df' in st.session_state:
     total_label = "overvalued" if diff_total > 0 else "undervalued"
 
     st.markdown(
+        f"🏠 **Apartment ID:** `{apartment_id}`\n\n💵 **Price:** `${total_price:,.0f}`\n\n📐 **Price per square meter:** `${price_per_sqm:,.0f}`"
+    )
+    st.markdown(
     f"🔍 This apartment is **{per_sqm_label}** by `${abs(diff_per_sqm):,.0f}` per square meter.\n\n"
-    f"🔍 It is **{total_label}** by `${abs(diff_total):,.0f}` in total."
+    f"🔍 The total price is **{total_label}** by `${abs(diff_total):,.0f}` in total."
     )
     #q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
     loforest = joblib.load("loforest_full_model.pkl")
@@ -215,7 +210,32 @@ if 'result_df' in st.session_state:
 
     #lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
 
-    st.markdown(
-        f"📈 **Prediction interval (90% probability):** `${lower:,.0f}` - `${upper:,.0f}` per square meter\n\n"
-        f"💰 **Total price range:** `${lower*df['area'].iloc[0]:,.0f}` - `${upper*df['area'].iloc[0]:,.0f}`"
-    )
+    from helper_code.plots import get_feature_names
+    from helper_code.plots import shap_value_waterplot
+    from helper_code.plots import price_interval_plot
+
+    feature_names = get_feature_names(estate_status_types_col,
+                                        bathroom_types_col,
+                                        project_types_col,
+                                        heating_types_col,
+                                        parking_types_col,
+                                        storeroom_types_col,
+                                        material_types_col,
+                                        swimming_pool_types_col,
+                                        hot_water_types_col,
+                                        conditions_col,
+                                        living_room_types_col,
+                                        build_years_col,
+                                        user_types_col,
+                                        urbans_col,)
+
+    
+    st.subheader("Prediction and intervals")
+    per_square_fig = price_interval_plot(lower,upper,prediction,true_value=price_per_sqm)
+    st.pyplot(per_square_fig)
+
+    total_price_fig = price_interval_plot(lower,upper,prediction,true_value=price_per_sqm,total_price=True,area=df['area'][0])
+    st.pyplot(total_price_fig)
+    st.subheader("SHAP Waterfall Plot")
+    shap_fig = shap_value_waterplot(input_array, feature_names, model)
+    st.pyplot(shap_fig)

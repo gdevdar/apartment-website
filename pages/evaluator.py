@@ -1009,8 +1009,6 @@ input_array = [
 +living_room_types_val+build_years_val+user_types_val+urbans_val
 #st.write("You selected:", input_array)
 
-
-
 import joblib
 model = joblib.load("xgboost_model18june.pkl")
 loforest = joblib.load("loforest_full_model.pkl")
@@ -1018,10 +1016,8 @@ loforest = joblib.load("loforest_full_model.pkl")
 feature_vector = np.array(input_array).reshape(1,-1)
 
 prediction = model.predict(feature_vector)
-
 # Show prediction
-st.subheader("Predicted Price:")
-st.write(f"Price per square is {prediction[0]:,.2f} \$ and the total {prediction[0]*area:,.2f} \$")
+# st.write(f"Price per square is {prediction[0]:,.2f} \$ and the total {prediction[0]*area:,.2f} \$")
 
 #q_hat = pd.read_csv('conformal/q_hat.csv')['q_hat'].iloc[0]
 
@@ -1029,5 +1025,38 @@ bounds = loforest.predict(feature_vector)
 lower = bounds[:,0][0]
 upper = bounds[:,1][0]
 #lower, upper = prediction[0] - q_hat, prediction[0] + q_hat
-st.write(f"The prediction interval with 90% probability is: {lower:,.2f} \$ - {upper:,.2f} \$")
-st.write(f"With the total price being: {lower*area:,.2f} \$ - {upper*area:,.2f} \$")
+# st.write(f"The prediction interval with 90% probability is: {lower:,.2f} \$ - {upper:,.2f} \$")
+# st.write(f"With the total price being: {lower*area:,.2f} \$ - {upper*area:,.2f} \$")
+
+import matplotlib.pyplot as plt
+import matplotlib.transforms as transforms
+
+from helper_code.plots import get_feature_names
+from helper_code.plots import shap_value_waterplot
+from helper_code.plots import price_interval_plot
+
+feature_names = get_feature_names(estate_status_types_col,
+                                    bathroom_types_col,
+                                    project_types_col,
+                                    heating_types_col,
+                                    parking_types_col,
+                                    storeroom_types_col,
+                                    material_types_col,
+                                    swimming_pool_types_col,
+                                    hot_water_types_col,
+                                    conditions_col,
+                                    living_room_types_col,
+                                    build_years_col,
+                                    user_types_col,
+                                    urbans_col,)
+
+st.subheader("Prediction and intervals")
+per_square_fig = price_interval_plot(lower,upper,prediction)
+st.pyplot(per_square_fig)
+
+
+total_price_fig = price_interval_plot(lower,upper,prediction,total_price=True,area=area)
+st.pyplot(total_price_fig)
+st.subheader("SHAP Waterfall Plot")
+shap_fig = shap_value_waterplot(input_array, feature_names, model)
+st.pyplot(shap_fig)
