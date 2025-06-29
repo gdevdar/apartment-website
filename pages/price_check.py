@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 st.title("Apartment Price Checker")
-st.write("Enter a MyHome.ge apartment listing URL to check its estimated price.")
+st.write("Enter a MyHome.ge apartment listing URL to check its estimated price. (Only works for the Georgian page)")
 
 # URL input field
 url = st.text_input(
