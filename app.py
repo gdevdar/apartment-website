@@ -35,3 +35,15 @@ with col2:
 st.markdown("---")
 st.markdown("Select a tool above to begin your property analysis journey!")
 
+st.markdown("""
+---
+<sub>
+You can view our profiles and projects on GitHub and LinkedIn:
+</sub><br>
+
+[![GitHub](https://img.shields.io/badge/GitHub-gdevdar-181717?logo=github&style=flat-square)](https://github.com/gdevdar)
+[![GitHub](https://img.shields.io/badge/GitHub-MalkhazBirtvelishvili-181717?logo=github&style=flat-square)](https://github.com/MalkhazBirtvelishvili)<br>
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Giorgi%20Devdariani-0A66C2?logo=linkedin&style=flat-square)](https://www.linkedin.com/in/giorgi-devdariani/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Malkhaz%20Birtvelishvili-0A66C2?logo=linkedin&style=flat-square)](https://www.linkedin.com/in/malkhaz-birtvelishvili-463850285/)
+""", unsafe_allow_html=True)
+
